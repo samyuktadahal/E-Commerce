@@ -1,0 +1,61 @@
+import pyodbc
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+
+# Set seaborn style
+sns.set(style="whitegrid")
+
+def connect_to_mssql(server, database):
+    """
+    Connect to MSSQL using Windows Authentication
+    """
+    connection_string = (
+        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"SERVER={server};"
+        f"DATABASE={database};"
+        f"Trusted_Connection=yes;"
+    )
+    try:
+        conn = pyodbc.connect(connection_string)
+        print("✅ Windows Authentication successful!")
+        return conn
+    except Exception as e:
+        print(f"❌ Connection failed: {e}")
+        return None
+
+# Correct server name (backslash must be escaped OR use raw string)
+SERVER = r'SAMYUKTA\LOCALHOST'  # use raw string to handle backslash
+DATABASE = 'Ecommerce'
+
+# Establish connection
+conn = connect_to_mssql(SERVER, DATABASE)
+
+
+# Connection with CURSOR
+
+def connect_to_mssql_with_cursor(server, database):
+    """
+    Connect to MSSQL using Windows Authentication and return connection + cursor
+    """
+    connection_string = (
+        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"SERVER={server};"
+        f"DATABASE={database};"
+        f"Trusted_Connection=yes;"
+    )
+    try:
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        print("✅ Connected successfully with cursor.")
+        return conn, cursor
+    except Exception as e:
+        print(f"❌ Connection failed: {e}")
+        return None, None
+
+
+SERVER = r'SAMYUKTA\LOCALHOST'
+DATABASE = 'Ecommerce'
+
+conn, cursor = connect_to_mssql_with_cursor(SERVER, DATABASE)
